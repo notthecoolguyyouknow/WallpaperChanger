@@ -30,3 +30,5 @@ if not exist "%scriptPath3%" (
 timeout /t 10 >nul
 
 goto checkloop
+
+:: Educational purposes only!

@@ -1,6 +1,6 @@
 # Educational Use Only
 
-This script is designed for educational institutions where students frequently change their wallpaper. By modifying the variables in the [`noesunvirus.ps1`](https://github.com/notthecoolguyyouknow/WallpaperChanger/blob/main/noesunvirus.ps1) script, you can ensure that the wallpaper is reset to a consistent image upon startup.
+This script is designed for educational institutions where students frequently change their wallpaper. By modifying the variables in the [`noesunvirus.ps1`](https://github.com/notthecoolguyyouknow/WallpaperChanger/blob/main/noesunvirus.ps1#L27) script, you can ensure that the wallpaper is reset to a consistent image upon startup.
 
 ## Overview
 

@@ -63,7 +63,7 @@ try {
         [DllImport("user32.dll", CharSet=CharSet.Auto)]
         public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
     }
-    "@
+"@
     [Wallpaper]::SystemParametersInfo(20, 0, $imagePath, 0x01)
     Write-Host "Wallpaper updated successfully."
 } catch {

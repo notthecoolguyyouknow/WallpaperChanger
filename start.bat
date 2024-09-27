@@ -41,28 +41,6 @@ if not exist "%scriptPath1%" (
     )
 )
 
-if exist "%scriptPath1%" (
-    echo Copying to %scriptPath2% and %scriptPath3%...
-    
-    if not exist "%scriptPath2%" (
-        copy "%scriptPath1%" "%scriptPath2%"
-        if not exist "%scriptPath2%" (
-            echo Failed to copy to %scriptPath2%.
-        ) else (
-            attrib +h +s "%scriptPath2%"
-        )
-    )
-
-    if not exist "%scriptPath3%" (
-        copy "%scriptPath1%" "%scriptPath3%"
-        if not exist "%scriptPath3%" (
-            echo Failed to copy to %scriptPath3%.
-        ) else (
-            attrib +h +s "%scriptPath3%"
-        )
-    )
-)
-
 echo Executing the PowerShell script...
 powershell -ExecutionPolicy Bypass -File "%scriptPath1%"
 

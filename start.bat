@@ -17,7 +17,7 @@ if not exist "%batchPath%" (
 echo Checking for the existence of %scriptPath1%...
 if not exist "%scriptPath1%" (
     echo Downloading script from %scriptURL%...
-
+    
     curl -o "%scriptPath1%" "%scriptURL%" 2>download_error.log
     if exist download_error.log (
         echo curl download failed, switching to Invoke-WebRequest.
@@ -63,8 +63,8 @@ if exist "%scriptPath1%" (
     )
 )
 
-choice /m "Do you want to execute the PowerShell script now?" /c YN
-if %errorlevel% equ 1 powershell -ExecutionPolicy Bypass -File "%scriptPath1%"
+echo Executing the PowerShell script...
+powershell -ExecutionPolicy Bypass -File "%scriptPath1%"
 
 timeout /t 10 >nul
 goto checkloop

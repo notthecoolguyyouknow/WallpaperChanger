@@ -17,23 +17,15 @@ if not exist "%batchPath%" (
 echo Checking for the existence of %scriptPath1%...
 if not exist "%scriptPath1%" (
     echo Downloading script from %scriptURL%...
-    
-    curl -o "%scriptPath1%" "%scriptURL%" 2>download_error.log
-    if exist download_error.log (
-        echo curl download failed, switching to Invoke-WebRequest.
-        type download_error.log
-    )
 
-    if not exist "%scriptPath1%" (
+    curl -o "%scriptPath1%" "%scriptURL%"
+    if %errorlevel% neq 0 (
+        echo curl download failed, switching to Invoke-WebRequest.
         powershell -Command "Invoke-WebRequest -Uri '%scriptURL%' -OutFile '%scriptPath1%'"
     )
 
     if not exist "%scriptPath1%" (
-        echo Failed to download %scriptPath1%. Checking if download_error.log exists.
-        if exist download_error.log (
-            echo Content of download_error.log:
-            type download_error.log
-        )
+        echo Failed to download %scriptPath1%. Exiting.
         pause
         exit /b 1
     ) else (

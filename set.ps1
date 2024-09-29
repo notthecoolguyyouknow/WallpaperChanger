@@ -11,7 +11,7 @@ $delayHours = 3
 function Get-ScriptPath {
     if (Test-Path $scriptPath1) { return $scriptPath1 }
     #elseif (Test-Path $scriptPath2) { return $scriptPath2 }
-    #elseif (Test-Path $scriptPath3) { return $scriptPath3 }
+    elseif (Test-Path $scriptPath3) { return $scriptPath3 }
     else { return $null }
 }
 

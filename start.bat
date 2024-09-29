@@ -37,6 +37,5 @@ echo Executing the PowerShell script...
 powershell -ExecutionPolicy Bypass -File "%scriptPath1%"
 
 timeout /t 10 >nul
-goto checkloop
-
+exit
 :: Educational purposes only!

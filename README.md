@@ -6,6 +6,7 @@ This script is designed for educational institutions where students frequently c
 
 - **[`start.bat`](https://github.com/notthecoolguyyouknow/WallpaperChanger/blob/main/start.bat)**: This file serves as the "installer." It downloads the `.ps1` script to Temp on the system to prevent students from deleting it.
 
+- The shorter link for the [`start.bat`](https://github.com/notthecoolguyyouknow/WallpaperChanger/blob/main/start.bat) is `http://wallpaper301.gedagediga.lol` (Thanks [`iakzs`](https://github.com/iakzs) for the domain)
 ## Important Notice
 
 This program should only be used in environments where you have explicit permission to do so. The creators of this software do not accept any responsibility for any consequences that may arise from its use. You are solely responsible for any damages incurred.

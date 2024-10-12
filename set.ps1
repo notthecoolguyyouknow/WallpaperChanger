@@ -77,12 +77,30 @@ try {
     exit
 }
 
+function Reset-Wallpaper {
+    Add-Type -TypeDefinition @"
+    using System;
+    using System.Runtime.InteropServices;
+    public class Wallpaper {
+        [DllImport("user32.dll", CharSet=CharSet.Auto)]
+        public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+    }
+"@
+    [Wallpaper]::SystemParametersInfo(20, 0, $imagePath, 0x01)
+}
+
 try {
-    Register-WmiEvent -Query "SELECT * FROM Win32_ComputerShutdownEvent" -Action {
+    Register-WmiEvent -Query "SELECT * FROM __InstanceModificationEvent WITHIN 5 WHERE TargetInstance ISA 'Win32_Desktop'" -Action {
+        $currentWallpaper = (Get-ItemProperty 'HKCU:\Control Panel\Desktop\' -Name WallPaper).WallPaper
+        if ($currentWallpaper -ne "$imagePath") {
+            Reset-Wallpaper
+        }
+        Register-WmiEvent -Query "SELECT * FROM Win32_ComputerShutdownEvent" -Action {
         Add-Type -AssemblyName PresentationFramework
-        [System.Windows.MessageBox]::Show("Why so serious?", "System Notification", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
+        [System.Windows.MessageBox]::Show("e", "System Notification", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
     }
 } catch {
+    Show-ErrorMessage "Error monitoring wallpaper changes: $_"
 }
 
 $startupShortcutPath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\Start.lnk"

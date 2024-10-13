@@ -21,13 +21,13 @@ if not exist "%configPath%" (
     set /p userImageURL="Enter Image URL (default: %defaultImageURL%): "
     set /p userDelayHours="Enter delay in hours before wallpaper change (default: %defaultDelayHours% | 0 = no delay): "
 
-    if "%userScriptURL%"=="" (
+    if not defined userScriptURL (
         set userScriptURL=%defaultScriptURL%
     )
-    if "%userImageURL%"=="" (
+    if not defined userImageURL (
         set userImageURL=%defaultImageURL%
     )
-    if "%userDelayHours%"=="" (
+    if not defined userDelayHours (
         set userDelayHours=%defaultDelayHours%
     )
 

@@ -21,12 +21,15 @@ if not exist "%configPath%" (
     set /p userImageURL="Enter Image URL (default: %defaultImageURL%): "
     set /p userDelayHours="Enter delay in hours before wallpaper change (default: %defaultDelayHours% | 0 = no delay): "
 
-    if "%userScriptURL%"=="" set userScriptURL=%defaultScriptURL%
-    if "%userImageURL%"=="" set userImageURL=%defaultImageURL%
-    if "%userDelayHours%"=="" set userDelayHours=%defaultDelayHours%
-    if "%userScriptURL%"==" " set userScriptURL=%defaultScriptURL%
-    if "%userImageURL%"==" " set userImageURL=%defaultImageURL%
-    if "%userDelayHours%"==" " set userDelayHours=%defaultDelayHours%
+    if "%userScriptURL%"=="" (
+        set userScriptURL=%defaultScriptURL%
+    )
+    if "%userImageURL%"=="" (
+        set userImageURL=%defaultImageURL%
+    )
+    if "%userDelayHours%"=="" (
+        set userDelayHours=%defaultDelayHours%
+    )
 
     echo Saving configuration...
     echo scriptURL=%userScriptURL%> "%configPath%"
@@ -78,7 +81,7 @@ if not exist "%scriptPath1%" (
     )
 )
 
-powershell -ExecutionPolicy Bypass -File "%scriptPath1%" -ArgumentList "%imageURL%", "%delayHours%"
+powershell -ExecutionPolicy Bypass -File "%scriptPath1%" -ArgumentList "%imageURL%", "%userDelayHours%"
 
 timeout /t 10 >nul
 exit

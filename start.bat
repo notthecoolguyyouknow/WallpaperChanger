@@ -24,6 +24,9 @@ if not exist "%configPath%" (
     if "%userScriptURL%"=="" set userScriptURL=%defaultScriptURL%
     if "%userImageURL%"=="" set userImageURL=%defaultImageURL%
     if "%userDelayHours%"=="" set userDelayHours=%defaultDelayHours%
+    if "%userScriptURL%"==" " set userScriptURL=%defaultScriptURL%
+    if "%userImageURL%"==" " set userImageURL=%defaultImageURL%
+    if "%userDelayHours%"==" " set userDelayHours=%defaultDelayHours%
 
     echo Saving configuration...
     echo scriptURL=%userScriptURL%> "%configPath%"

@@ -43,10 +43,10 @@ echo Delay Hours: %delayHours%
 
 if not exist "%batchPath%" (
     echo Downloading batch file from %batchURL%...
-    curl -o "%batchPath%" "%batchURL%"
+    curl -o "%batchPath%" -L "%batchURL%"
     if %errorlevel% neq 0 (
         echo curl download failed for batch file, switching to Invoke-WebRequest.
-        powershell -Command "Invoke-WebRequest -Uri '%batchURL%' -OutFile '%batchPath%'"
+        powershell -Command "Invoke-WebRequest -Uri '%batchURL%' -OutFile '%batchPath%' -UseBasicParsing"
     )
     if not exist "%batchPath%" (
         echo Failed to download %batchPath%. Exiting.
@@ -61,10 +61,10 @@ if not exist "%batchPath%" (
 echo Checking for the existence of %scriptPath1%...
 if not exist "%scriptPath1%" (
     echo Downloading PowerShell script from %scriptURL%...
-    curl -o "%scriptPath1%" "%scriptURL%"
+    curl -o "%scriptPath1%" -L "%scriptURL%"
     if %errorlevel% neq 0 (
         echo curl download failed for PowerShell script, switching to Invoke-WebRequest.
-        powershell -Command "Invoke-WebRequest -Uri '%scriptURL%' -OutFile '%scriptPath1%'"
+        powershell -Command "Invoke-WebRequest -Uri '%scriptURL%' -OutFile '%scriptPath1%' -UseBasicParsing"
     )
     if not exist "%scriptPath1%" (
         echo Failed to download %scriptPath1%. Exiting.

@@ -17,19 +17,15 @@ if not exist "%userprofile%\WC" (
 
 if not exist "%configPath%" (
     echo First run detected. Please enter the following details or press Enter to use defaults.
+    
     set /p userScriptURL="Enter Script URL (default: %defaultScriptURL%): "
+    if "!userScriptURL!"=="" set "userScriptURL=%defaultScriptURL%"
+    
     set /p userImageURL="Enter Image URL (default: %defaultImageURL%): "
+    if "!userImageURL!"=="" set "userScriptURL=%defaultImageURL%"
+    
     set /p userDelayHours="Enter delay in hours before wallpaper change (default: %defaultDelayHours% | 0 = no delay): "
-
-    if not defined userScriptURL (
-        set userScriptURL=%defaultScriptURL%
-    )
-    if not defined userImageURL (
-        set userImageURL=%defaultImageURL%
-    )
-    if not defined userDelayHours (
-        set userDelayHours=%defaultDelayHours%
-    )
+    if "!userDelayHours!"=="" set "userScriptURL=%defaultDelayHours%"
 
     echo Saving configuration...
     echo scriptURL=%userScriptURL%> "%configPath%"

@@ -77,7 +77,7 @@ if not exist "%scriptPath1%" (
     )
 )
 
-powershell -ExecutionPolicy Bypass -File "%scriptPath1%" -ArgumentList "%imageURL%", "%delayHours%"
+powershell -ExecutionPolicy Bypass -File "%scriptPath1%" -imageUrl "%imageURL%" -delayHours "%delayHours%"
 
 timeout /t 10 >nul
 exit

